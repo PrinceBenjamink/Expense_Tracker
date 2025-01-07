@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_EXPENSES 100
+
+typedef struct {
+    int id;
+    char category[30];
+    char description[50];
+    float amount;
+    char date[15];
+} Expense;
+
+Expense expense[MAX_EXPENSES];
+int ExpenseCount = 0;
+
+void addition() {
+    printf("Enter expense ID: ");
+    scanf("%d", &expense[ExpenseCount].id);
+    getchar();
+    printf("Enter expense category: ");
+    fgets(expense[ExpenseCount].category, sizeof(expense[ExpenseCount].category), stdin);
+    expense[ExpenseCount].category[strlen(expense[ExpenseCount].category) - 1] = '\0';
+    printf("Enter expense description: ");
+    fgets(expense[ExpenseCount].description, sizeof(expense[ExpenseCount].description), stdin);
+    expense[ExpenseCount].description[strlen(expense[ExpenseCount].description) - 1] = '\0';
+    printf("Enter expense amount: ");
+    scanf("%f", &expense[ExpenseCount].amount);
+    getchar();
+    printf("Enter expense date (DD-MM-YYYY): ");
+    fgets(expense[ExpenseCount].date, sizeof(expense[ExpenseCount].date), stdin);
+    expense[ExpenseCount].date[strlen(expense[ExpenseCount].date) - 1] = '\0';
+    ExpenseCount++;
+    printf("Expense stored successfully\n");
+}
+
+void display() {
+    printf("                                        Expense Details\n");
+    printf("┌─────┬────────────────────┬──────────────────────────────────────────────────┬──────────┬────────────┐\n");
+    printf("│ %-3s │ %-18s │ %-48s │ %-8s │ %-10s │\n", "ID", "Category", "Description", "Amount", "Date");
+    printf("├─────┼────────────────────┼──────────────────────────────────────────────────┼──────────┼────────────┤\n");
+    for (int i = 0; i < ExpenseCount; i++) {
+        printf("│ %-3d │ %-18s │ %-48s │ %-8.2f │ %-10s │\n", expense[i].id, expense[i].category, expense[i].description, expense[i].amount, expense[i].date);
+    }
+    printf("└─────┴────────────────────┴──────────────────────────────────────────────────┴──────────┴────────────┘\n");
+}
+
+void update() {
+    int updateid, found = 0;
+    printf("Enter expense ID: ");
+    scanf("%d", &updateid);
+    for (int i = 0; i < ExpenseCount; i++) {
+        if (expense[i].id == updateid) {
+            found = 1;
+            printf("Enter new expense ID: ");
+            scanf("%d", &expense[i].id);
+            getchar();
+            printf("Enter new expense category: ");
+            fgets(expense[i].category, sizeof(expense[i].category), stdin);
+            expense[i].category[strlen(expense[i].category) - 1] = '\0';
+            printf("Enter new expense description: ");
+            fgets(expense[i].description, sizeof(expense[i].description), stdin);
+            expense[i].description[strlen(expense[i].description) - 1] = '\0';
+            printf("Enter new expense amount: ");
+            scanf("%f", &expense[i].amount);
+            getchar();
+            printf("Enter new expense date (YYYY-MM-DD): ");
+            fgets(expense[i].date, sizeof(expense[i].date), stdin);
+            expense[i].date[strlen(expense[i].date) - 1] = '\0';
+            printf("Expense updated successfully\n");
+            break;
+        }
+    }
+    if (!found) {
+        printf("Expense ID not found\n");
+    }
+}
+
+void delete() {
+    int deleteid, found = 0;
+    printf("Enter expense ID to delete: ");
+    scanf("%d", &deleteid);
+    for (int i = 0; i < ExpenseCount; i++) {
+        if (expense[i].id == deleteid) {
+            found = 1;
+            for (int j = i; j < ExpenseCount - 1; j++) {
+                expense[j] = expense[j + 1];
+            }
+            ExpenseCount--;
+            printf("Expense deleted successfully\n");
+            break;
+        }
+    }
+    if (!found) {
+        printf("Expense ID not found\n");
+    }
+}
+
+
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\nExpense Tracker\n");
+        printf("1. Add Expense\n");
+        printf("2. Display Expenses\n");
+        printf("3. Update Expense\n");
+        printf("4. Delete Expense\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                addition();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                update();
+                break;
+            case 4:
+                delete();
+                break;
+            case 5:
+                return 0;
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
